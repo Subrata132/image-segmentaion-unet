@@ -5,7 +5,7 @@ from torch.utils.data import DataLoader
 import torchvision.transforms as transform
 from data_loader.data_loader import CustomDataLoader
 from model.modified_unet import ModifiedUNet
-from utils.visuals import show
+from utils.visuals import show_result
 
 
 class Trainer:
@@ -68,7 +68,7 @@ class Trainer:
                 optimizer.step()
                 train_loss = train_loss + loss.item()
             all_train_loss.append(train_loss/len(train_data_loader))
-            show(image, output, label)
+            show_result(image, output, label)
             print('Validating...........')
             for image, label in tqdm(validation_data_loader):
                 image = image.to(device=self.device)
