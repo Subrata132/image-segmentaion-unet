@@ -1,23 +1,14 @@
-import torch
-from torch.utils.data import DataLoader
-from data_loader.data_loader import CustomDataLoader
-from model.model import UNet
-from utils.visuals import show_result
+import argparse
+from trainer import Trainer
 
 
 def main():
-    # data_loader = CustomDataLoader(
-    #     image_path='data/train/'
-    # )
-    # batch_size = 4
-    # data_loader = DataLoader(data_loader, batch_size=batch_size)
-    # image, label = next(iter(data_loader))
-    # print(f'Image type: {type(image)} Image shape: {image.shape}')
-    # print(f'Label type: {type(label)} Label shape: {label.shape}')
-    # # show_result(image, label)
-    image = torch.rand((4, 1, 572, 572))
-    unet = UNet(input_channel=1)
-    unet(image)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--batch_size", default=2, type=int)
+    parser.add_argument("--epochs", default=5, type=int)
+    args = parser.parse_args()
+    trainer = Trainer(batch_size=args.batch_size, epochs=args.epochs)
+    trainer.train()
 
 
 if __name__ == '__main__':
