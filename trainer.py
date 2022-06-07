@@ -14,13 +14,15 @@ class Trainer:
             batch_size=2,
             lr=0.01,
             epochs=30,
-            image_path='data/train/'
+            image_path='data/train/',
+            show=False
     ):
         self.batch_size = batch_size
         self.lr = lr
         self.epochs = epochs
         self.image_path = image_path
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.show = show
 
     def train(self):
         image_transform = transform.Compose(
@@ -68,7 +70,8 @@ class Trainer:
                 optimizer.step()
                 train_loss = train_loss + loss.item()
             all_train_loss.append(train_loss/len(train_data_loader))
-            show_result(image, output, label)
+            if self.show:
+                show_result(image, output, label)
             print('Validating...........')
             for image, label in tqdm(validation_data_loader):
                 image = image.to(device=self.device)
@@ -79,4 +82,8 @@ class Trainer:
             validation_loss.append(val_loss/len(validation_data_loader))
             print(f'Epoch: {i+1} | Train loss: {all_train_loss[-1]} | Validation loss: {validation_loss[-1]}')
             print('')
+        model_state = {
+            "state_dict": model.state_dict()
+        }
+        torch.save(model_state, f'saved_weights/saved_model_{self.epochs}.pth')
 
