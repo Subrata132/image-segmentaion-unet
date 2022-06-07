@@ -12,6 +12,7 @@ venv/
 .idea/
 __pycache__/
 data/
+saved_weights/
 *.py[cod]
 
 
