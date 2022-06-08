@@ -14,13 +14,15 @@ class Trainer:
             batch_size=2,
             lr=0.01,
             epochs=30,
-            image_path='data/train/',
+            train_image_path='data/train/',
+            test_image_path='data/val/',
             show=False
     ):
         self.batch_size = batch_size
         self.lr = lr
         self.epochs = epochs
-        self.image_path = image_path
+        self.train_image_path = train_image_path
+        self.test_image_path = test_image_path
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.show = show
 
@@ -32,11 +34,11 @@ class Trainer:
             [transform.ToTensor()]
         )
         data_loader = CustomDataLoader(
-            image_path=self.image_path,
+            image_path=self.train_image_path,
             image_transformer=image_transform,
             label_transformer=label_transform
         )
-        no_train = int(len(data_loader)*0.85)
+        no_train = int(len(data_loader) * 0.85)
         no_valid = len(data_loader) - no_train
         train_data_loader, validation_data_loader = torch.utils.data.random_split(
             dataset=data_loader,
@@ -56,7 +58,7 @@ class Trainer:
         all_train_loss = []
         validation_loss = []
         for i in range(self.epochs):
-            print(f'Epoch: {i+1}')
+            print(f'Epoch: {i + 1}')
             train_loss = 0
             val_loss = 0
             print('Training.............')
@@ -69,7 +71,7 @@ class Trainer:
                 loss.backward()
                 optimizer.step()
                 train_loss = train_loss + loss.item()
-            all_train_loss.append(train_loss/len(train_data_loader))
+            all_train_loss.append(train_loss / len(train_data_loader))
             if self.show:
                 show_result(image, output, label)
             print('Validating...........')
@@ -79,11 +81,10 @@ class Trainer:
                 output = model(image)
                 loss = loss_func(output, label)
                 val_loss = val_loss + loss.item()
-            validation_loss.append(val_loss/len(validation_data_loader))
-            print(f'Epoch: {i+1} | Train loss: {all_train_loss[-1]} | Validation loss: {validation_loss[-1]}')
+            validation_loss.append(val_loss / len(validation_data_loader))
+            print(f'Epoch: {i + 1} | Train loss: {all_train_loss[-1]} | Validation loss: {validation_loss[-1]}')
             print('')
         model_state = {
             "state_dict": model.state_dict()
         }
         torch.save(model_state, f'saved_weights/saved_model_{self.epochs}.pth')
-
