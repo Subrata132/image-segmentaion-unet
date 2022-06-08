@@ -1,3 +1,5 @@
+import os
+import json
 from tqdm import tqdm
 import torch
 import torch.nn as nn
@@ -87,4 +89,15 @@ class Trainer:
         model_state = {
             "state_dict": model.state_dict()
         }
+        loss_dict = {
+            'train_loss': all_train_loss,
+            'val_loss': validation_loss
+        }
+        if not os.path.isdir('saved_weights'):
+            os.makedirs('saved_weights')
+
         torch.save(model_state, f'saved_weights/saved_model_{self.epochs}.pth')
+        with open('saved_weights/loss_info.json', 'w') as file:
+            json.dump(loss_dict, file)
+        file.close()
+
