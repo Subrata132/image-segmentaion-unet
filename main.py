@@ -8,7 +8,6 @@ def main():
     parser.add_argument("--epochs", default=5, type=int)
     parser.add_argument("--train_img", default='data/train/', type=str)
     parser.add_argument("--test_img", default='data/val/', type=str)
-    parser.add_argument("--epochs", default=5, type=int)
     args = parser.parse_args()
     trainer = Trainer(
         batch_size=args.batch_size,
