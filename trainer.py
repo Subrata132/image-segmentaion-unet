@@ -96,9 +96,10 @@ class Trainer:
                 model_state = {
                     "state_dict": model.state_dict()
                 }
-                if best_val_loss >= current_val_loss:
+                if best_val_loss <= current_val_loss:
                     torch.save(model_state, f'saved_weights/best_model.pth')
                     best_epoch = i
+                    best_val_loss = current_val_loss
             loss_dict = {
                 'train_loss': all_train_loss,
                 'val_loss': validation_loss
@@ -119,7 +120,7 @@ class Trainer:
                 batch_size=self.batch_size
             )
             model = ModifiedUNet(input_channel=3).to(device=self.device)
-            model.load_state_dict(torch.load('saved_weights/saved_model_20.pth')['state_dict'])
+            model.load_state_dict(torch.load('saved_weights/best_model.pth')['state_dict'])
             model.eval()
             fig, axes = plt.subplots(self.batch_size, 3, figsize=(18, 7))
             with torch.no_grad():
