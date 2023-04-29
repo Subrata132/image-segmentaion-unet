@@ -15,7 +15,7 @@ class Trainer:
     def __init__(
             self,
             batch_size=2,
-            lr=0.01,
+            lr=0.001,
             epochs=30,
             train_image_path='data/train/',
             test_image_path='data/val/',
