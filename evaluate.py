@@ -7,6 +7,7 @@ from data_loader.data_loader import CustomDataLoader
 from model.modified_unet import ModifiedUNet
 from metrics.metrics import compute_iou
 from torchmetrics import JaccardIndex, Dice
+from torchmetrics.classification import MulticlassJaccardIndex
 
 
 def evaluate():
@@ -29,11 +30,12 @@ def evaluate():
         batch_size=batch_size
     )
     model = ModifiedUNet(input_channel=3).to(device=device)
-    model.load_state_dict(torch.load('saved_weights/saved_model_20.pth')['state_dict'])
+    model.load_state_dict(torch.load('saved_weights/best_model.pth')['state_dict'])
     model.eval()
     ious = []
     dices = []
-    iou = JaccardIndex(task="multiclass", num_classes=256)
+    # iou = JaccardIndex(task="multiclass", num_classes=256)
+    iou = MulticlassJaccardIndex(num_classes=256, average="weighted")
     dice = Dice(average='micro')
     with torch.no_grad():
         for image, label in tqdm(test_data_loader):
