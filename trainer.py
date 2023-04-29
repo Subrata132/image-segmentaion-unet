@@ -61,6 +61,10 @@ class Trainer:
             optimizer = torch.optim.Adam(model.parameters(), lr=self.lr)
             all_train_loss = []
             validation_loss = []
+            best_val_loss = 1e10
+            best_epoch = 0
+            if not os.path.isdir('saved_weights'):
+                os.makedirs('saved_weights')
             for i in range(self.epochs):
                 print(f'Epoch: {i + 1}')
                 train_loss = 0
@@ -85,23 +89,25 @@ class Trainer:
                     output = model(image)
                     loss = loss_func(output, label)
                     val_loss = val_loss + loss.item()
+                current_val_loss = val_loss / len(validation_data_loader)
                 validation_loss.append(val_loss / len(validation_data_loader))
                 print(f'Epoch: {i + 1} | Train loss: {all_train_loss[-1]} | Validation loss: {validation_loss[-1]}')
                 print('')
-            model_state = {
-                "state_dict": model.state_dict()
-            }
+                model_state = {
+                    "state_dict": model.state_dict()
+                }
+                if best_val_loss >= current_val_loss:
+                    torch.save(model_state, f'saved_weights/best_model.pth')
+                    best_epoch = i
             loss_dict = {
                 'train_loss': all_train_loss,
                 'val_loss': validation_loss
             }
-            if not os.path.isdir('saved_weights'):
-                os.makedirs('saved_weights')
 
-            torch.save(model_state, f'saved_weights/saved_model_{self.epochs}.pth')
             with open('saved_weights/loss_info.json', 'w') as file:
                 json.dump(loss_dict, file)
             file.close()
+            print(f'model saved at epoch {best_epoch}')
         else:
             test_data_loader = CustomDataLoader(
                 image_path=self.test_image_path,
