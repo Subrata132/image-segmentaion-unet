@@ -8,6 +8,7 @@ import torchvision.transforms as transform
 import matplotlib.pyplot as plt
 from data_loader.data_loader import CustomDataLoader
 from model.modified_unet import ModifiedUNet
+from model.model import UNet
 from utils.visuals import show_result
 
 
@@ -56,7 +57,7 @@ class Trainer:
                 dataset=validation_data_loader,
                 batch_size=self.batch_size
             )
-            model = ModifiedUNet(input_channel=3).to(device=self.device)
+            model = UNet(input_channel=3).to(device=self.device)
             loss_func = nn.MSELoss()
             optimizer = torch.optim.Adam(model.parameters(), lr=self.lr)
             all_train_loss = []
@@ -98,7 +99,7 @@ class Trainer:
                     "state_dict": model.state_dict()
                 }
                 if current_val_loss <= best_val_loss:
-                    torch.save(model_state, f'saved_weights/best_model.pth')
+                    torch.save(model_state, f'saved_weights/unet_best_model.pth')
                     best_epoch = i
                     best_val_loss = current_val_loss
                     counter = 0
