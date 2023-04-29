@@ -97,7 +97,7 @@ class Trainer:
                 model_state = {
                     "state_dict": model.state_dict()
                 }
-                if best_val_loss <= current_val_loss:
+                if current_val_loss <= best_val_loss:
                     torch.save(model_state, f'saved_weights/best_model.pth')
                     best_epoch = i
                     best_val_loss = current_val_loss
