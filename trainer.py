@@ -113,7 +113,7 @@ class Trainer:
                 batch_size=self.batch_size
             )
             model = ModifiedUNet(input_channel=3).to(device=self.device)
-            model.load_state_dict(torch.load('saved_weights/saved_model_120.pth')['state_dict'])
+            model.load_state_dict(torch.load('saved_weights/saved_model_20.pth')['state_dict'])
             model.eval()
             fig, axes = plt.subplots(self.batch_size, 3, figsize=(18, 7))
             with torch.no_grad():
