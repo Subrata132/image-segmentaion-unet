@@ -63,6 +63,7 @@ class Trainer:
             validation_loss = []
             best_val_loss = 1e10
             best_epoch = 0
+            counter = 0
             if not os.path.isdir('saved_weights'):
                 os.makedirs('saved_weights')
             for i in range(self.epochs):
@@ -100,6 +101,11 @@ class Trainer:
                     torch.save(model_state, f'saved_weights/best_model.pth')
                     best_epoch = i
                     best_val_loss = current_val_loss
+                    counter = 0
+                else:
+                    counter += 1
+                if counter > 9:
+                    break
             loss_dict = {
                 'train_loss': all_train_loss,
                 'val_loss': validation_loss
