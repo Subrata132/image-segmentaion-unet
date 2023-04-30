@@ -15,7 +15,7 @@ from data_loader.pixel_fixer import PixelFixer
 def evaluate():
     test_image_path = 'data/val/'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    batch_size = 16
+    batch_size = 2
     image_transform = transform.Compose(
         [transform.ToTensor()]
     )
@@ -58,9 +58,9 @@ def evaluate():
                 ious.append(compute_iou(y_true=y_true, y_pred=y_pred))
             # ious.append(iou(pred, actual))
             # dices.append(dice(pred, actual))
-            mses.append(loss_func(output, label).item())
+            # mses.append(loss_func(output, label).item())
 
-    print(np.mean(mses), np.std(mses))
+    # print(np.mean(mses), np.std(mses))
     print(np.mean(ious), np.std(ious))
 
 
