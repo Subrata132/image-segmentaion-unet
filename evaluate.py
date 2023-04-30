@@ -54,7 +54,7 @@ def evaluate():
                 pred = torch.clamp((torch.mul(outputs[0], 255)).int(), min=0, max=255)
                 actual = (torch.mul(labels[0], 255)).int()
                 _, y_true = fixer.fix(actual)
-                _, y_pred = fixer.fix((pred))
+                _, y_pred = fixer.fix(pred)
                 ious.append(compute_iou(y_true=y_true, y_pred=y_pred))
             # ious.append(iou(pred, actual))
             # dices.append(dice(pred, actual))
