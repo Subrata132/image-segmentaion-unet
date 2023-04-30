@@ -12,7 +12,7 @@ class CustomDataLoader(Dataset):
             label_transformer=None
     ):
         self.image_path = image_path
-        self.image_names = os.listdir(image_path)
+        self.image_names = os.listdir(image_path)[:10]
         self.image_transformer = image_transformer
         self.label_transformer = label_transformer
 
